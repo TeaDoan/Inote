@@ -11,7 +11,7 @@ import CoreData
 
 class NotesTableViewController: UITableViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
     
-    var notes = [Notes]()
+    var notes = [Note]()
     var managedOjectContext: NSManagedObjectContext!
 
     override func viewDidLoad() {
@@ -27,7 +27,7 @@ class NotesTableViewController: UITableViewController,UIImagePickerControllerDel
     }
     
     func loadData() {
-        let noteRequest:NSFetchRequest<Notes> = Notes.fetchRequest()
+        let noteRequest:NSFetchRequest<Note> = Note.fetchRequest()
         do {
             notes = try managedOjectContext.fetch(noteRequest)
             self.tableView.reloadData()
@@ -36,18 +36,6 @@ class NotesTableViewController: UITableViewController,UIImagePickerControllerDel
         }
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-    // MARK: - Table view data source
-
-//    override func numberOfSections(in tableView: UITableView) -> Int {
-//        // #warning Incomplete implementation, return the number of sections
-//        return 1
-
-    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return notes.count
@@ -84,48 +72,47 @@ class NotesTableViewController: UITableViewController,UIImagePickerControllerDel
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
     }
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage{
             picker.dismiss(animated: true, completion: nil)
-            self.createNoteItem(with: image)
+            showCreateNoteAlert(forImage: image)
         }
     }
-    func createNoteItem(with image:UIImage)   {
-        let noteItem = Notes(context: managedOjectContext)
+    
+    func createNewNote(photo: UIImage, name: String?, description: String?) {
+        let noteItem = Note(context: self.managedOjectContext)
         
-        noteItem.image = NSData(data: UIImageJPEGRepresentation(image, 0.3)!) as Data
+        noteItem.image = NSData(data: UIImageJPEGRepresentation(photo, 0.3)!) as Data
+        noteItem.name = name
+        noteItem.longText = description
         
+        try! self.managedOjectContext.save()
+    }
+    
+    func showCreateNoteAlert(forImage image:UIImage) {
         
         let alert = UIAlertController(title: "New Note", message: "Enter place and description", preferredStyle: .alert)
+    
         alert.addTextField { (textField:UITextField) in
             textField.placeholder = "Place"
-            
-            
         }
         alert.addTextField { (textField:UITextField) in
             textField.placeholder = "Description"
-            
         }
+        
         alert.addAction(UIAlertAction(title: "Save", style: .default, handler: {(action:UIAlertAction) in
-            let nameField = alert.textFields?.first
-            
-            let descriptionField = alert.textFields?.last
-            
-            if nameField?.text != "" && descriptionField?.text != ""{
-                noteItem.name = nameField?.text
-                noteItem.longText = nameField?.text
-                do {
-                    try self.managedOjectContext.save()
-                }catch{
-                    print("Error")
-                }
-            }
+            self.createNewNote(photo: image,
+                                name: alert.textFields?.first?.text,
+                         description: alert.textFields?.last?.text)
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
         self.present(alert, animated: true, completion: nil)
-}
+    }
     
 
+    
 }
 
 
