@@ -15,7 +15,8 @@
 		B0BFC7111FF6CE1800D53891 /* Note_V2UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0BFC7101FF6CE1800D53891 /* Note_V2UITests.swift */; };
 		B0BFC71F1FF6D0DB00D53891 /* NotesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0BFC71E1FF6D0DB00D53891 /* NotesTableViewController.swift */; };
 		B0BFC7211FF6D39500D53891 /* NotesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0BFC7201FF6D39500D53891 /* NotesTableViewCell.swift */; };
-		B0BFC7241FF6D63400D53891 /* NotesModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B0BFC7221FF6D63400D53891 /* NotesModel.xcdatamodeld */; };
+		B0BFC7241FF6D63400D53891 /* NoteModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B0BFC7221FF6D63400D53891 /* NoteModel.xcdatamodeld */; };
+		B0F2366E1FFCABA0005350C2 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0F2366D1FFCABA0005350C2 /* CoreDataStack.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		B0BFC71E1FF6D0DB00D53891 /* NotesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesTableViewController.swift; sourceTree = "<group>"; };
 		B0BFC7201FF6D39500D53891 /* NotesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesTableViewCell.swift; sourceTree = "<group>"; };
 		B0BFC7231FF6D63400D53891 /* NotesModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NotesModel.xcdatamodel; sourceTree = "<group>"; };
+		B0F2366D1FFCABA0005350C2 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,8 +107,9 @@
 				B0BFC6F41FF6CE1800D53891 /* Main.storyboard */,
 				B0BFC7201FF6D39500D53891 /* NotesTableViewCell.swift */,
 				B0BFC71E1FF6D0DB00D53891 /* NotesTableViewController.swift */,
+				B0F2366D1FFCABA0005350C2 /* CoreDataStack.swift */,
 				B0BFC6F71FF6CE1800D53891 /* Assets.xcassets */,
-				B0BFC7221FF6D63400D53891 /* NotesModel.xcdatamodeld */,
+				B0BFC7221FF6D63400D53891 /* NoteModel.xcdatamodeld */,
 				B0BFC6F91FF6CE1800D53891 /* LaunchScreen.storyboard */,
 				B0BFC6FC1FF6CE1800D53891 /* Info.plist */,
 			);
@@ -265,8 +268,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B0F2366E1FFCABA0005350C2 /* CoreDataStack.swift in Sources */,
 				B0BFC6F11FF6CE1800D53891 /* AppDelegate.swift in Sources */,
-				B0BFC7241FF6D63400D53891 /* NotesModel.xcdatamodeld in Sources */,
+				B0BFC7241FF6D63400D53891 /* NoteModel.xcdatamodeld in Sources */,
 				B0BFC71F1FF6D0DB00D53891 /* NotesTableViewController.swift in Sources */,
 				B0BFC7211FF6D39500D53891 /* NotesTableViewCell.swift in Sources */,
 			);
@@ -568,13 +572,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		B0BFC7221FF6D63400D53891 /* NotesModel.xcdatamodeld */ = {
+		B0BFC7221FF6D63400D53891 /* NoteModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
 				B0BFC7231FF6D63400D53891 /* NotesModel.xcdatamodel */,
 			);
 			currentVersion = B0BFC7231FF6D63400D53891 /* NotesModel.xcdatamodel */;
-			path = NotesModel.xcdatamodeld;
+			path = NoteModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

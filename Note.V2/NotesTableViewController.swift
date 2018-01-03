@@ -12,24 +12,17 @@ import CoreData
 class NotesTableViewController: UITableViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
     
     var notes = [Note]()
-    var managedOjectContext: NSManagedObjectContext!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        managedOjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        
         loadData()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
     
     func loadData() {
         let noteRequest:NSFetchRequest<Note> = Note.fetchRequest()
         do {
-            notes = try managedOjectContext.fetch(noteRequest)
+            notes = try CoreDataStack.shared.context.fetch(noteRequest)
             self.tableView.reloadData()
         }catch {
             print("You have an Error")
@@ -80,20 +73,10 @@ class NotesTableViewController: UITableViewController,UIImagePickerControllerDel
         }
     }
     
-    func createNewNote(photo: UIImage, name: String?, description: String?) {
-        let noteItem = Note(context: self.managedOjectContext)
-        
-        noteItem.image = NSData(data: UIImageJPEGRepresentation(photo, 0.3)!) as Data
-        noteItem.name = name
-        noteItem.longText = description
-        
-        try! self.managedOjectContext.save()
-    }
-    
     func showCreateNoteAlert(forImage image:UIImage) {
         
+        // create alert with text fields
         let alert = UIAlertController(title: "New Note", message: "Enter place and description", preferredStyle: .alert)
-    
         alert.addTextField { (textField:UITextField) in
             textField.placeholder = "Place"
         }
@@ -101,17 +84,31 @@ class NotesTableViewController: UITableViewController,UIImagePickerControllerDel
             textField.placeholder = "Description"
         }
         
+        // set create note action on alert (what happens when "Save" pressed)
         alert.addAction(UIAlertAction(title: "Save", style: .default, handler: {(action:UIAlertAction) in
             self.createNewNote(photo: image,
                                 name: alert.textFields?.first?.text,
                          description: alert.textFields?.last?.text)
         }))
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+    
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil)) // if user taps "Cancel"
         
         self.present(alert, animated: true, completion: nil)
     }
     
-
+    func createNewNote(photo: UIImage, name: String?, description: String?) {
+        
+        // creates note item in Core Data context
+        let noteItem = Note(context: CoreDataStack.shared.context)
+        
+        // set properties of Note (to be saved in Core Data)
+        noteItem.image = NSData(data: UIImageJPEGRepresentation(photo, 0.3)!) as Data
+        noteItem.name = name
+        noteItem.longText = description
+        
+        // tells Core Data to save the current state of its context (if there are changes)
+        CoreDataStack.shared.saveIfNeeded()
+    }
     
 }
 
