@@ -16,44 +16,47 @@ class NotesTableViewController: UITableViewController,UIImagePickerControllerDel
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        loadData()
+        loadAndDisplayData()
     }
     
-    func loadData() {
+    func loadAndDisplayData() {
+        
+        // create request (search) for all Notes in Core Data
         let noteRequest:NSFetchRequest<Note> = Note.fetchRequest()
-        do {
-            notes = try CoreDataStack.shared.context.fetch(noteRequest)
-            self.tableView.reloadData()
-        }catch {
-            print("You have an Error")
-        }
+        
+        // execute the request, save results in the notes array, and crash (!) if failed
+        notes = try! CoreDataStack.shared.context.fetch(noteRequest)
+        
+        // refresh table view
+        self.tableView.reloadData()
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         return notes.count
     }
     
-    
+    // table view asks for a cell for each row (determined by numberOfRowsInSection)
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        // create a custom cell from template "cell" on Storyboard
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! NotesTableViewCell
         
+        // get Note from Core Data for row
         let noteItem = notes[indexPath.row]
         
-        
-        if let noteImage = UIImage(data: noteItem.image as! Data ) {
-            
+        // format cell based on Note's data
+        if let noteImage = UIImage(data: noteItem.image!) {
             cell.backgroundImageView.image = noteImage
         }
         cell.nameLabel.text = noteItem.name
-        
         cell.descriptionLabel.text = noteItem.longText
         
-        return cell
+        return cell // cell should be ready for display
     }
     
+    // for each row, table view asks how tall the cell is
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 120
+        return 120 // each cell will be 120 points tall
     }
     
     @IBAction func addNote(_ sender: Any) {
@@ -62,6 +65,7 @@ class NotesTableViewController: UITableViewController,UIImagePickerControllerDel
         imagePicker.delegate = self
         self.present(imagePicker, animated: true, completion: nil)
     }
+    
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
     }
@@ -106,8 +110,11 @@ class NotesTableViewController: UITableViewController,UIImagePickerControllerDel
         noteItem.name = name
         noteItem.longText = description
         
-        // tells Core Data to save the current state of its context (if there are changes)
+        // save the current state of Core Data (if there are changes)
         CoreDataStack.shared.saveIfNeeded()
+        
+        // re-fetch notes and reload table view
+        loadAndDisplayData()
     }
     
 }
